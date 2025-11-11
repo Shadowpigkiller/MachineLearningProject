@@ -6,10 +6,9 @@ from sklearn.metrics import accuracy_score, classification_report
 from sklearn.feature_extraction.text import CountVectorizer
 
 
-TRAIN_OPTION = "1" # 2 Has issues right now due to Column issues
+TRAIN_OPTION = "1"  # 2 Has issues right now due to Column issues
 FILE_TRAIN1 = "Data/spam/spam_train1.csv"
 FILE_TRAIN2 = "Data/spam/spam_train2.csv"
-
 
 
 def load_data(path):
@@ -17,13 +16,8 @@ def load_data(path):
     # if TRAIN_OPTION == 1:
     #     column = [0,2]
     # else
-    
-    df = pd.read_csv(
-        path,
-        usecols=[0, 1],
-        names=["label", "text"],
-        header=None
-    )
+
+    df = pd.read_csv(path, usecols=[0, 1], names=["label", "text"], header=None)
     return df
 
 
@@ -42,7 +36,7 @@ elif TRAIN_OPTION.lower() == "both":
     train = pd.concat([train1, train2], axis=0).reset_index(drop=True)
 
 
-X_train, X_test, y_train, y_test = train_test_split( 
+X_train, X_test, y_train, y_test = train_test_split(
     train["text"],
     train["label"],
     test_size=0.2,
@@ -70,12 +64,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 vectorizer = CountVectorizer(
     lowercase=True,
     stop_words="english",
-    token_pattern=r"\b\w+\b",   # Only Letters and Numbers can exist
-    min_df=2,                   # Ensure there are at least 2 uses of the text
+    token_pattern=r"\b\w+\b",  # Only Letters and Numbers can exist
+    min_df=2,  # Ensure there are at least 2 uses of the text
 )
 
 X_train_vec = vectorizer.fit_transform(X_train)
-X_test_vec  = vectorizer.transform(X_test)
+X_test_vec = vectorizer.transform(X_test)
 
 # Model
 clf = MultinomialNB()
