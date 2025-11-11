@@ -4,7 +4,6 @@ from sklearn.naive_bayes import GaussianNB, MultinomialNB
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.feature_extraction.text import CountVectorizer
-import numpy as np
 
 
 TRAIN_OPTION = "1" # 2 Has issues right now due to Column issues
