@@ -1,23 +1,33 @@
 import pandas as pd
 import re
-from sklearn.naive_bayes import GaussianNB, MultinomialNB
+from sklearn.naive_bayes import MultinomialNB, ComplementNB
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.feature_extraction.text import CountVectorizer
+import csv
 
 
-TRAIN_OPTION = "1"  # 2 Has issues right now due to Column issues
+TRAIN_OPTION = "3"
 FILE_TRAIN1 = "Data/spam/spam_train1.csv"
 FILE_TRAIN2 = "Data/spam/spam_train2.csv"
+MODEL = "1"
+
+
+def label_finder(path):
+    with open(path, newline='', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        header = next(reader, None)
+        row = next(reader, None)
+        
+        for col, value in enumerate(row):
+            if value.strip().lower() == "ham" or value.strip().lower() == "spam":
+                return col
 
 
 def load_data(path):
-    # column =[]
-    # if TRAIN_OPTION == 1:
-    #     column = [0,2]
-    # else
-
-    df = pd.read_csv(path, usecols=[0, 1], names=["label", "text"], header=None)
+    label_col = label_finder(path)
+    text_col = label_col + 1
+    df = pd.read_csv(path, usecols=[label_col, text_col], names=["label", "text"], header=0)
     return df
 
 
@@ -29,7 +39,7 @@ elif TRAIN_OPTION == "2":
     print("Using training dataset 2 only...")
     train = load_data(FILE_TRAIN2)
 
-elif TRAIN_OPTION.lower() == "both":
+elif TRAIN_OPTION.lower() == "3":
     print("Using both training datasets...")
     train1 = load_data(FILE_TRAIN1)
     train2 = load_data(FILE_TRAIN2)
@@ -72,10 +82,16 @@ X_train_vec = vectorizer.fit_transform(X_train)
 X_test_vec = vectorizer.transform(X_test)
 
 # Model
-clf = MultinomialNB()
+if MODEL == "1":
+    clf = MultinomialNB()
+
+elif MODEL == "2":
+    clf = ComplementNB()
+
+
 clf.fit(X_train_vec, y_train)
 
 # Evaluate
 pred = clf.predict(X_test_vec)
-print("Accuracy:", accuracy_score(y_test, pred))
-print(classification_report(y_test, pred))
+print(f"Accuracy:, {accuracy_score(y_test, pred) *100:.2f}%")
+print(classification_report(y_test, pred ,zero_division=0))
