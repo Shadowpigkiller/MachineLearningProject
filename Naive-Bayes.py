@@ -95,4 +95,4 @@ print(classification_report(labels, pred ,zero_division=0))
 
 # Export predictions
 results = pd.DataFrame({"Prediction": pred})
-results.replace({"spam": 1, "ham": 0}).to_csv("NBTestResults.txt", index=False, header=False)
+results.replace({"spam": 1, "ham": 0}).to_csv("VuSpam.txt", index=False, header=False)
