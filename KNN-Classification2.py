@@ -102,7 +102,8 @@ def run_dataset(setnum, train_X, test_X, train_y, out_dir="."):
 
     # Save predictions
     out_pred_path = os.path.join(out_dir, f"predictions_set{setnum}.csv")
-    pd.DataFrame({"prediction": preds}).to_csv(out_pred_path, index=False)
+    pd.DataFrame(preds)
+    np.savetxt(out_pred_path, preds, index=False)
     print(f"Predictions saved to {out_pred_path}")
 
     return gs.best_estimator_, preds
